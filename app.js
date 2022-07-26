@@ -46,10 +46,8 @@ function game() {
     const winner = document.querySelector('#winner');
     if (plrScore > cmptScore) {
         winner.textContent = 'Player Wins!';
-    } else if (plrScore < cmptScore) {
-        winner.textContent = 'Computer Wins!';
     } else {
-        winner.textContent = 'Draw!';
+        winner.textContent = 'Computer Wins!';
     }
 }
 
