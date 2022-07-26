@@ -1,9 +1,19 @@
+let plrScore = 0;
+let cmptScore = 0;
+
 function getComputerChoice() {
     const choices = ['Rock', 'Paper', 'Scissors'];
     return choices[Math.floor(Math.random() * choices.length)];
 }
 
 function playRound(playerSelection, computerSelection) {
+    if (plrScore === 5 || cmptScore === 5) {
+        return;
+    }
+
+    const score = document.querySelector('#score');
+    const outcome = document.querySelector('#outcome');
+
     const winOutcomes = {
         rock: 'scissors',
         paper: 'rock',
@@ -12,34 +22,41 @@ function playRound(playerSelection, computerSelection) {
 
     // Test for draw
     if (playerSelection.toLowerCase() === computerSelection.toLowerCase()) {
-        return [`Draw! You both picked ${computerSelection}`, 0, 0];
+        outcome.textContent = `Draw! You both picked ${computerSelection}`
+        return;
     }
 
     // Test for win
     if (winOutcomes[playerSelection.toLowerCase()] === computerSelection.toLowerCase()) {
-        return [`You Win! ${playerSelection} beats ${computerSelection}`, 1, 0];
+        plrScore++;
+        score.textContent = `${plrScore} - ${cmptScore}`;
+        outcome.textContent = `You Win! ${playerSelection} beats ${computerSelection}`;
+    } else {
+        cmptScore++;
+        score.textContent = `${plrScore} - ${cmptScore}`;
+        outcome.textContent = `You Lose! ${computerSelection} beats ${playerSelection}`;
     }
-    return [`You Lose! ${computerSelection} beats ${playerSelection}`, 0, 1];
+
+    if (plrScore === 5 || cmptScore === 5) {
+        game();
+    }
 }
 
 function game() {
-    let plrScore = 0;
-    let cmptScore = 0;
-
-    for (let i = 0; i < 5; i++) {
-        roundOutcome = playRound(prompt('Rock, paper, or scissors?'), getComputerChoice())
-        plrScore += roundOutcome[1];
-        cmptScore += roundOutcome[2];
-        console.log(roundOutcome[0]);
-    }
-
+    const winner = document.querySelector('#winner');
     if (plrScore > cmptScore) {
-        console.log(`You Win! ${plrScore} - ${cmptScore}`);
+        winner.textContent = 'Player Wins!';
     } else if (plrScore < cmptScore) {
-        console.log(`You Lose! ${plrScore} - ${cmptScore}`);
+        winner.textContent = 'Computer Wins!';
     } else {
-        console.log(`Draw! ${plrScore} - ${cmptScore}`);
+        winner.textContent = 'Draw!';
     }
 }
 
-game();
+const buttons = document.querySelectorAll('button');
+
+buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        playRound(button.id, getComputerChoice());
+    });
+});
